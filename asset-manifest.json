@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/hackout-25/static/css/main.83270610.css",
-    "main.js": "/hackout-25/static/js/main.eb5348b4.js",
+    "main.js": "/hackout-25/static/js/main.fdc3e04b.js",
     "index.html": "/hackout-25/index.html",
     "main.83270610.css.map": "/hackout-25/static/css/main.83270610.css.map",
-    "main.eb5348b4.js.map": "/hackout-25/static/js/main.eb5348b4.js.map"
+    "main.fdc3e04b.js.map": "/hackout-25/static/js/main.fdc3e04b.js.map"
   },
   "entrypoints": [
     "static/css/main.83270610.css",
-    "static/js/main.eb5348b4.js"
+    "static/js/main.fdc3e04b.js"
   ]
 }
