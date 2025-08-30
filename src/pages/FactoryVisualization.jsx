@@ -11,6 +11,13 @@ export default function FactoryVisualization() {
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
 
+  // Custom input values for energy sources
+  const [customValues, setCustomValues] = useState({
+    solar: 150,
+    wind: 200,
+    tidal: 100
+  });
+
   // Real-time data simulation
   const [factoryData, setFactoryData] = useState({
     solar: {
@@ -68,6 +75,18 @@ export default function FactoryVisualization() {
     }
   });
 
+  // Calculate total electrolysis output based on custom values
+  const totalElectrolysisOutput = customValues.solar + customValues.wind + customValues.tidal;
+
+  // Handle custom value changes
+  const handleCustomValueChange = (source, value) => {
+    const numValue = parseFloat(value) || 0;
+    setCustomValues(prev => ({
+      ...prev,
+      [source]: numValue
+    }));
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -76,26 +95,26 @@ export default function FactoryVisualization() {
           ...prev,
           solar: {
             ...prev.solar,
-            currentOutput: Math.max(0, prev.solar.capacity * (0.7 + Math.random() * 0.3)),
+            currentOutput: Math.max(0, customValues.solar * (0.7 + Math.random() * 0.3)),
             chargingLevel: Math.min(100, prev.solar.chargingLevel + (Math.random() - 0.5) * 2)
           },
           wind: {
             ...prev.wind,
-            currentOutput: Math.max(0, prev.wind.capacity * (0.8 + Math.random() * 0.2)),
+            currentOutput: Math.max(0, customValues.wind * (0.8 + Math.random() * 0.2)),
             windSpeed: Math.max(5, 20 * Math.random()),
             chargingLevel: Math.min(100, prev.wind.chargingLevel + (Math.random() - 0.5) * 1.5)
           },
           tidal: {
             ...prev.tidal,
-            currentOutput: Math.max(0, prev.tidal.capacity * (0.6 + Math.random() * 0.4)),
+            currentOutput: Math.max(0, customValues.tidal * (0.6 + Math.random() * 0.4)),
             tideHeight: 1 + Math.random() * 3,
             chargingLevel: Math.min(100, prev.tidal.chargingLevel + (Math.random() - 0.5) * 1)
           },
           electrolysis: {
             ...prev.electrolysis,
-            currentProduction: Math.max(0, prev.electrolysis.capacity * (0.75 + Math.random() * 0.25)),
-            oxygenOutput: Math.max(0, 3200 * (0.8 + Math.random() * 0.2)),
-            hydrogenOutput: Math.max(0, 400 * (0.8 + Math.random() * 0.2))
+            currentProduction: Math.max(0, totalElectrolysisOutput * (0.75 + Math.random() * 0.25)),
+            oxygenOutput: Math.max(0, totalElectrolysisOutput * 8 * (0.8 + Math.random() * 0.2)),
+            hydrogenOutput: Math.max(0, totalElectrolysisOutput * (0.8 + Math.random() * 0.2))
           },
           storage: {
             ...prev.storage,
@@ -106,7 +125,7 @@ export default function FactoryVisualization() {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [isRunning]);
+  }, [isRunning, customValues, totalElectrolysisOutput]);
 
   const downloadFactoryReport = () => {
     const reportData = {
@@ -276,6 +295,18 @@ export default function FactoryVisualization() {
                     <Sun className="w-10 h-10 text-white" />
                   </div>
                   <h3 className="font-semibold text-yellow-700">Solar Panels</h3>
+                  <div className="mb-2">
+                    <input
+                      type="number"
+                      value={customValues.solar}
+                      onChange={(e) => handleCustomValueChange('solar', e.target.value)}
+                      className="w-20 px-2 py-1 text-sm border border-gray-300 rounded text-center"
+                      placeholder="MW"
+                      min="0"
+                      step="0.1"
+                    />
+                    <span className="text-xs text-slate-500 ml-1">MW</span>
+                  </div>
                   <p className="text-sm text-slate-600">{factoryData.solar.currentOutput.toFixed(1)} MW</p>
                   <p className="text-xs text-slate-500">{factoryData.solar.panels} panels</p>
                 </div>
@@ -285,6 +316,18 @@ export default function FactoryVisualization() {
                     <Wind className="w-10 h-10 text-white" />
                   </div>
                   <h3 className="font-semibold text-blue-700">Wind Turbines</h3>
+                  <div className="mb-2">
+                    <input
+                      type="number"
+                      value={customValues.wind}
+                      onChange={(e) => handleCustomValueChange('wind', e.target.value)}
+                      className="w-20 px-2 py-1 text-sm border border-gray-300 rounded text-center"
+                      placeholder="MW"
+                      min="0"
+                      step="0.1"
+                    />
+                    <span className="text-xs text-slate-500 ml-1">MW</span>
+                  </div>
                   <p className="text-sm text-slate-600">{factoryData.wind.currentOutput.toFixed(1)} MW</p>
                   <p className="text-xs text-slate-500">{factoryData.wind.windSpeed.toFixed(1)} m/s</p>
                 </div>
@@ -294,6 +337,18 @@ export default function FactoryVisualization() {
                     <Waves className="w-10 h-10 text-white" />
                   </div>
                   <h3 className="font-semibold text-teal-700">Tidal Generators</h3>
+                  <div className="mb-2">
+                    <input
+                      type="number"
+                      value={customValues.tidal}
+                      onChange={(e) => handleCustomValueChange('tidal', e.target.value)}
+                      className="w-20 px-2 py-1 text-sm border border-gray-300 rounded text-center"
+                      placeholder="MW"
+                      min="0"
+                      step="0.1"
+                    />
+                    <span className="text-xs text-slate-500 ml-1">MW</span>
+                  </div>
                   <p className="text-sm text-slate-600">{factoryData.tidal.currentOutput.toFixed(1)} MW</p>
                   <p className="text-xs text-slate-500">{factoryData.tidal.tideHeight.toFixed(1)}m tide</p>
                 </div>
@@ -316,6 +371,11 @@ export default function FactoryVisualization() {
                 <h3 className="font-semibold text-purple-700">Electrolysis Unit</h3>
                 <p className="text-sm text-slate-600">{factoryData.electrolysis.hydrogenOutput.toFixed(1)} kg/h H₂</p>
                 <p className="text-xs text-slate-500">{factoryData.electrolysis.oxygenOutput.toFixed(1)} kg/h O₂</p>
+                {/* Total Electrolysis Output Display */}
+                <div className="mt-3 p-2 bg-purple-100 rounded-lg border border-purple-200">
+                  <p className="text-xs font-medium text-purple-800">Total Input Energy</p>
+                  <p className="text-lg font-bold text-purple-700">{totalElectrolysisOutput.toFixed(1)} MW</p>
+                </div>
               </div>
 
               {/* Storage */}
