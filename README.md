@@ -6,7 +6,8 @@ In addition to technical simulations, the platform encourages collaboration betw
 
 The application is built using React.js with HashRouter for smooth GitHub Pages deployment, ensuring that navigation between pages (Home, Login, Signup, Dashboard, Map, Analytics, etc.) works correctly even on static hosting platforms. It is designed to be scalable, visually interactive, and beginner-friendly, making it a suitable demonstration project for hackathons, sustainability initiatives, and energy transition research.
 
-📌 Detailed Project Description (Point Form) 🔹 Core Idea
+📌 Detailed Project Description (Point Form) 
+🔹 Core Idea
 
 A web app to map, analyze, and optimize hydrogen infrastructure.
 
